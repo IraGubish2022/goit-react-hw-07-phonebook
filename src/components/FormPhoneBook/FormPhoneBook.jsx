@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Notify } from 'notiflix';
 import Style from './FormPhoneBook.module.css';
-import { getContact } from 'redux/selectors';
-import { addNewContact } from 'redux/contactSlice';
+import { selectContact } from 'redux/selectors';
+import { addContact } from 'redux/operations';
+//import { addNewContact } from 'redux/contactSlice';
 
 const FormPhoneBook = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const NameInputFormId = uuidv4();
   const NumberInputFormId = uuidv4();
-  const contacts = useSelector(getContact);
+  const contacts = useSelector(selectContact);
   const dispatch = useDispatch();
 
   const handleChange = evt => {
@@ -21,8 +22,8 @@ const FormPhoneBook = () => {
         setName(value);
         break;
 
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
 
       default:
@@ -35,14 +36,14 @@ const FormPhoneBook = () => {
 
     if (contacts.find(contact => contact.name === name)) {
       Notify.failure(`${name} is already in contacts.`);
-      return false;
-    } else if (contacts.find(contact => contact.number === number)) {
-      Notify.failure(`${number} is already in contacts.`);
+      return;
+    } else if (contacts.find(contact => contact.phone === phone)) {
+      Notify.failure(`${phone} is already in contacts.`);
       return false;
     }
-    dispatch(addNewContact(name, number));
+    dispatch(addContact(name, phone));
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -68,8 +69,8 @@ const FormPhoneBook = () => {
           className={Style.inputForm}
           type="tel"
           placeholder="Enter number"
-          name="number"
-          value={number}
+          name="phone"
+          value={phone}
           onChange={handleChange}
         />
       </label>
