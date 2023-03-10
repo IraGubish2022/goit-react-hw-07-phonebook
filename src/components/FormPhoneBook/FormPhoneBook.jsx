@@ -41,7 +41,7 @@ const FormPhoneBook = () => {
       Notify.failure(`${phone} is already in contacts.`);
       return false;
     }
-    dispatch(addContact(name, phone));
+    dispatch(addContact({name, phone}));
     setName('');
     setPhone('');
   };
